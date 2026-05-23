@@ -14,20 +14,55 @@
 
 <div class="app-container">
 
+    <!-- ☁️ NUBES ANIMADAS -->
+    <div class="clouds">
+
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+        <div class="cloud cloud3"></div>
+
+    </div>
+
+    {% if resultado and resultado.tipo_clima == "nublado" %}
+
+    <div class="fog"></div>
+
+    {% endif %}
+
+{% if resultado and resultado.tipo_clima == "noche" %}
+
+    <div class="stars">
+
+        {% for i in range(40) %}
+
+            <div class="star"></div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
     <!-- ☀️ SOL GIRANDO -->
     {% if resultado and resultado.tipo_clima == "soleado" %} <!-- esto significa: "si el clima es soleado" --> <!-- o sea, básicamente es una condicional  -->
 
-        <div class="sun">☀️</div> <!-- entonces "crea el sol" -->
+        <div class="sun">
+
+            <div class="sun-rays"></div>
+
+        </div>
 
     {% endif %}
 
     <!-- 🌧️ LLUVIA -->
     {% if resultado and resultado.tipo_clima == "lluvia" %} <!-- si está lloviendo  -->
 
+    <div class="lightning"></div>
+
         <div class="rain"> <!-- entonces: crea la caja gigante de lluvia -->
 
             <!-- Creamos muchas gotas -->
-            {% for i in range(20) %} <!-- esto significa: "repetí esto "20" veces -->
+            {% for i in range(45) %} <!-- esto significa: "repetí esto "20" veces -->
 
                 <div class="drop" style="left: {{ i * 5 }}%"></div> <!-- Y repite esto 20 veces. Esto: "left: {{ i * 5 }}%" significa que mueve cada gota horizontalmente, si no se hace eso, caerían una encima de otra -->
 
@@ -36,6 +71,21 @@
         </div>
 
     {% endif %}
+
+    {% if resultado and resultado.tipo_clima == "nieve" %}
+
+    <div class="snow">
+
+        {% for i in range(40) %}
+
+        <div class="snowflake" style="left: {{ i * 3 }}%"></div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
     <h1>🌤️ Mi App del Clima</h1> <!-- Título principal visible en la página -->
 
     <!-- FORMULARIO PARA BUSCAR CLIMA -->
@@ -93,9 +143,16 @@
 
     {% for ciudad in resultado.historial %}
 
-        <a href="/buscar/{{ ciudad }}" class="historial-item">
-            📍 {{ ciudad }}
-        </a>
+        <div class="historial-item">
+
+            <a href="/buscar/{{ ciudad }}" class="historial-link">
+                📍 {{ ciudad }}
+            </a>
+
+            <a href="/eliminar-historial/{{ ciudad }}" class="delete-btn">
+                ❌
+            </a>
+        </div>
 
     {% endfor %}
 
@@ -110,7 +167,12 @@
     {% for ciudad in resultado.favoritos %}
 
         <div class="historial-item">
+
             ⭐ {{ ciudad }}
+
+            <a href="/eliminar-favorito/{{ ciudad }}" class="delete-btn">
+                ❌
+            </a>
         </div>
 
     {% endfor %}

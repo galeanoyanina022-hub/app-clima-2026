@@ -1,5 +1,6 @@
 /* ESTILO GENERAL DE LA PÁGINA */
 body {
+    transition: background 1.2s ease-in-out;
     font-family: Arial, sans-serif;
     text-align: center;
     color: white;
@@ -15,7 +16,6 @@ body {
 
     /* 🌈 fondo base (luego cambia con clima) */
     background: linear-gradient(to bottom right, #74ebd5, #ACB6E5);
-    transition: background 0.8s ease; /* animación mas suave del fondo */
     overflow-x: hidden;
 }
 
@@ -130,37 +130,86 @@ button:active {
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    position: relative;
+    z-index: 2;
 }
 
 /* CLIMAS DINÁMICOS */
 
 body.lluvia {
-    background: linear-gradient(135deg, #373B44, #4286f4);
-}
+    background: linear-gradient(270deg, #373B44, #4286f4, #2c3e50);
 
-body.nublado {
-    background: linear-gradient(135deg, #757F9A, #D7DDE8);
+    background-size: 600% 600%;
+
+    animation: cieloMovimiento 12s ease infinite;
 }
 
 body.soleado {
-    background: linear-gradient(135deg, #f7971e, #ffd200);
+    background: linear-gradient(270deg, #f7971e, #ffd200, #fff3a0);
+
+    background-size: 600% 600%;
+
+    animation: cieloMovimiento 10s ease infinite;
 }
 
 body.normal {
-    background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+    background: linear-gradient(270deg, #74ebd5, #ACB6E5, #74ebd5);
+
+    background-size: 600% 600%;
+
+    animation: cieloMovimiento 15s ease infinite;
+}
+
+body.noche {
+    background: linear-gradient(
+        270deg,
+        #0f2027,
+        #203a43,
+        #2c5364
+    );
+
+    background-size: 600% 600%;
+
+    animation: cieloMovimiento 20s ease infinite;
+}
+
+body.nublado {
+    background: linear-gradient(270deg, #757F9A, #D7DDE8, #bfc9d9);
+
+    background-size: 600% 600%;
+
+    animation: cieloMovimiento 18s ease infinite;
 }
 
 /* ☀️ SOL GIRANDO */
 
 .sun {
-    position: fixed; /* hace que el sol quede pegada a la pantalla */
-    top: 20px; /* baja el sol 20 pixeles desde arriba */
-    right: 20px; /* lo separa 20 pixeles del borde derecho */
-    font-size: 70px; /* hace el emoi gigante */
-    animation: girar 6s linear infinite; /* girar: nombre de la animación ; 6s: tarda 6 segundos ; linear: velocidad constante ; infinite: nunca termina */
-    filter: drop-shadow(0 0 25px yellow);
+    position: fixed;
 
-    z-index: 10;
+    top: 30px;
+    right: 30px;
+
+    width: 100px;
+    height: 100px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle,
+        #fff6a9,
+        #ffd000,
+        #ff9900
+    );
+
+    box-shadow:
+        0 0 30px #ffd000,
+        0 0 60px #ffae00,
+        0 0 100px rgba(255, 200, 0, 0.6);
+
+    animation: pulseSun 4s ease-in-out infinite;
+
+    z-index: 1;
 }
 
 @keyframes girar { /* acá se define "girar" */
@@ -178,23 +227,41 @@ body.normal {
     height: 100%; /* ocupa todo el alto */
     pointer-events: none; /* hace que la lluvia no pueda bloquear clics poque o ino la capa de lluvia taparía botones e inputs */
     overflow: hidden; /* esconde cosas que salen de la pantalla, sin overflow: hidden se verían gotas fuera de la pantalla */
+    z-index: 1;
 }
 
 /* gotas */
-.drop { /* objeto dentro de la caja grande (que es rain en este caso) */
-    position: absolute; /* permite mover cada gota individualmente */
-    top: -50px; /* hace que la gota empiece arriba de l pantalla */
-    width: 3px; /* ancho finito de la gota */
-    height: 60px; /* largo de la gota */
+.drop {
+    position: absolute;
+
+    top: -50px;
+
+    width: 3px;
+    height: 60px;
+
     border-radius: 20px;
-    background: rgba(255,255,255,0.6); /* rgba = red, green, blue, alpha; 255,255,255 = blanco ; 0.6 = transparencia */
-    animation: caer 1s linear infinite; /* "caer": nombre de la animación ; "1s": dura 1 segundo ; "linear": velocidad constante ; "infinite": nunca termina */
-    opacity: 0.6;
+
+    background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0),
+    rgba(255,255,255,0.7)
+);
+
+    animation: lluviaDiagonal 0.8s linear infinite;
+
+    transform: rotate(15deg);
+
+    opacity: 0.5;
 }
 
-@keyframes caer { /* acá definimos caer */
+@keyframes lluviaDiagonal {
+
+    from {
+        transform: translate(0, 0) rotate(15deg);
+    }
+
     to {
-        transform: translateY(100vh); /* significa: mové la gota hacia abajo hasta el final de la pantalla. "translateY": significa mové verticalmente. "100vh": altura de la pantalla */
+        transform: translate(-120px, 100vh) rotate(15deg);
     }
 }
 
@@ -260,5 +327,336 @@ body.normal {
 
     100% {
         transform: translateY(0px);
+    }
+}
+
+.clouds {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+.cloud {
+    position: absolute;
+
+    background: rgba(255,255,255,0.35);
+
+    border-radius: 50px;
+
+    filter: blur(2px);
+
+    animation: moverNubes linear infinite;
+}
+
+/* ☁️ nube 1 */
+.cloud1 {
+    width: 180px;
+    height: 60px;
+
+    top: 15%;
+
+    animation-duration: 45s;
+}
+
+/* ☁️ nube 2 */
+.cloud2 {
+    width: 250px;
+    height: 70px;
+
+    top: 35%;
+
+    animation-duration: 60s;
+
+    opacity: 0.7;
+}
+
+/* ☁️ nube 3 */
+.cloud3 {
+    width: 150px;
+    height: 50px;
+
+    top: 60%;
+
+    animation-duration: 40s;
+
+    opacity: 0.5;
+}
+
+@keyframes moverNubes {
+
+    from {
+        transform: translateX(-300px);
+    }
+
+    to {
+        transform: translateX(120vw);
+    }
+}
+
+@keyframes cieloMovimiento {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.lightning {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: white;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 999;
+
+    animation: flash 6s infinite;
+}
+
+@keyframes flash {
+
+    0% { opacity: 0; }
+
+    2% { opacity: 0.8; }
+
+    4% { opacity: 0; }
+
+    50% { opacity: 0; }
+
+    52% { opacity: 0.6; }
+
+    54% { opacity: 0; }
+
+    100% { opacity: 0; }
+}
+
+.stars {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+.stars {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+
+    width: 3px;
+    height: 3px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    animation: twinkle 2s infinite;
+
+    opacity: 0.8;
+}
+
+/* posiciones distintas */
+.star:nth-child(1) { top: 10%; left: 20%; }
+.star:nth-child(2) { top: 30%; left: 50%; }
+.star:nth-child(3) { top: 15%; left: 80%; }
+.star:nth-child(4) { top: 60%; left: 40%; }
+.star:nth-child(5) { top: 75%; left: 70%; }
+.star:nth-child(6) { top: 45%; left: 10%; }
+.star:nth-child(7) { top: 20%; left: 65%; }
+.star:nth-child(8) { top: 80%; left: 25%; }
+
+/* posiciones aleatorias */
+.star:nth-child(odd) {
+    animation-duration: 3s;
+}
+
+.star:nth-child(even) {
+    animation-duration: 1.5s;
+}
+
+@keyframes twinkle {
+
+    0% {
+        opacity: 0.2;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.2;
+    }
+}
+
+@keyframes pulseSun {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.sun-rays {
+    position: absolute;
+
+    top: -20px;
+    left: -20px;
+
+    width: 140px;
+    height: 140px;
+
+    border-radius: 50%;
+
+    border: 3px dashed rgba(255,255,255,0.5);
+
+    animation: girar 15s linear infinite;
+}
+
+.fog {
+    position: fixed;
+
+    top: 0;
+    left: -50%;
+
+    width: 200%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            to right,
+            rgba(255,255,255,0.05),
+            rgba(255,255,255,0.15),
+            rgba(255,255,255,0.05)
+        );
+
+    filter: blur(25px);
+
+    animation: fogMove 25s linear infinite;
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+@keyframes fogMove {
+
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(20%);
+    }
+}
+
+/* ❄️ NIEVE */
+
+.snow {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    pointer-events: none;
+
+    overflow: hidden;
+
+    z-index: 1;
+}
+
+.snowflake {
+    position: absolute;
+
+    top: -10px;
+
+    width: 10px;
+    height: 10px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    opacity: 0.8;
+
+    animation: snowFall linear infinite;
+}
+
+/* diferentes tamaños */
+.snowflake:nth-child(odd) {
+    width: 6px;
+    height: 6px;
+
+    animation-duration: 8s;
+}
+
+.snowflake:nth-child(even) {
+    width: 10px;
+    height: 10px;
+
+    animation-duration: 12s;
+}
+
+@keyframes snowFall {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(110vh);
     }
 }

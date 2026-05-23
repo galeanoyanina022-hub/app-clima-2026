@@ -8,6 +8,8 @@ favoritos = [] # Lista de favoritos
 
 def consultar_clima(ciudad): # Función que consulta el clima
 
+    ciudad = ciudad.title()
+
     if ciudad not in historial:
 
         historial.append(ciudad) # Agregamos la ciudad al historial
@@ -37,17 +39,21 @@ def consultar_clima(ciudad): # Función que consulta el clima
             tipo_clima = "lluvia"
             icono = "🌧️"
 
-        # ☁️ NUBLADO
-        elif "nube" in clima or "cloud" in clima:
-
-            tipo_clima = "nublado"
-            icono = "☁️"
-
         # ☀️ SOLEADO
         elif "despejado" in clima or "clear" in clima:
 
-            tipo_clima = "soleado"
-            icono = "☀️"
+            icono_api = datos["weather"][0]["icon"]
+
+            # 🌙 si es de noche
+            if "n" in icono_api:
+
+                tipo_clima = "noche"
+                icono = "🌙"
+
+            else:
+
+                tipo_clima = "soleado"
+                icono = "☀️"
 
         # ⛈️ TORMENTA
         elif "torment" in clima or "storm" in clima:
@@ -64,8 +70,14 @@ def consultar_clima(ciudad): # Función que consulta el clima
         # ❄️ NIEVE
         elif "snow" in clima or "nieve" in clima:
 
-            tipo_clima = "nublado"
+            tipo_clima = "nieve"
             icono = "❄️"
+
+        # ☁️ NUBLADO
+        elif "nube" in clima or "cloud" in clima:
+
+            tipo_clima = "nublado"
+            icono = "☁️"
 
         # 🌡️ DEFAULT
         else:
@@ -90,8 +102,9 @@ def consultar_clima(ciudad): # Función que consulta el clima
 
         return {
             "error": "⚠️ No se encontró la ciudad o hubo un problema con la conexión",
+            "tipo_clima": "normal",
             "historial": historial,
-            "favoritos": favoritos
+            "favoritos": favoritos,
         }
 
 # Agregar a Favoritos
@@ -99,3 +112,16 @@ def consultar_clima(ciudad): # Función que consulta el clima
 def agregar_favorito(ciudad): # Función para agregar favoritos
     if ciudad not in favoritos: # Evita duplicados
         favoritos.append(ciudad)
+# ❌ Eliminar favorito
+
+def eliminar_favorito(ciudad):
+
+    if ciudad in favoritos:
+        favoritos.remove(ciudad)
+
+# ❌ Eliminar historial
+
+def eliminar_historial(ciudad):
+
+    if ciudad in historial:
+        historial.remove(ciudad)
