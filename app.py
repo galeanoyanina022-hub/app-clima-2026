@@ -19,7 +19,7 @@ def inicio():
 
 # RUTA PARA BUSCAR CLIMA
 
-@app.route("/clima", methods=["POST"])
+@app.route("/clima", methods=["GET", "POST"])
 def clima():
 
     ciudad = request.form["ciudad"].strip() # Obtenemos la ciudad que el usuario escribió en el formulario HTML
