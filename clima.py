@@ -14,7 +14,7 @@ def consultar_clima(ciudad): # Función que consulta el clima
 
         historial.append(ciudad) # Agregamos la ciudad al historial
 
-    api_key = "f29f1337d56a610d0fc5198e8ba14903" # Mi API key
+    api_key = "MI API" # Mi API key
 
     url = f"https://api.openweathermap.org/data/2.5/weather?q={ciudad}&appid={api_key}&units=metric&lang=es" # URL de la API
 
